@@ -40,7 +40,7 @@ frontend:
 health-service:
   replicas: 2
   image:
-    tag: v0.0.3
+    tag: v0.0.4
 notification-service:
   replicas: 1
   image:
