@@ -33,7 +33,7 @@ document-service:
 frontend:
   replicas: 2
   image:
-    tag: latest
+    tag: v0.0.1
   hpa:
     minReplicas: 2
     maxReplicas: 5
