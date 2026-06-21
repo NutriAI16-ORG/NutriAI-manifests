@@ -37,19 +37,40 @@ spec:
                   name: api-gateway-secrets
                   key: JWT_SECRET_KEY
             - name: AUTH_SERVICE_URL
-              value: "http://auth-service:8001"
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: AUTH_SERVICE_URL
             - name: DOCUMENT_SERVICE_URL
-              value: "http://document-service:8002"
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: DOCUMENT_SERVICE_URL
             - name: DIET_SERVICE_URL
-              value: "http://diet-service:8003"
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: DIET_SERVICE_URL
             - name: HEALTH_SERVICE_URL
-              value: "http://health-service:8004"
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: HEALTH_SERVICE_URL
             - name: NOTIFICATION_SERVICE_URL
-              value: "http://notification-service:8005"
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: NOTIFICATION_SERVICE_URL
             - name: PROFILE_SERVICE_URL
-              value: "http://profile-service:8006"
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: PROFILE_SERVICE_URL
             - name: ADMIN_SERVICE_URL
-              value: "http://admin-service:8007"
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: ADMIN_SERVICE_URL
           volumeMounts:
             - name: secrets-store-inline
               mountPath: "/mnt/secrets-store"

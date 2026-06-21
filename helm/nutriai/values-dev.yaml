@@ -60,3 +60,29 @@ profile-service:
   replicas: 2
   image:
     tag: latest
+
+config:
+  apiGateway:
+    authServiceUrl: "http://auth-service:8001"
+    documentServiceUrl: "http://document-service:8002"
+    dietServiceUrl: "http://diet-service:8003"
+    healthServiceUrl: "http://health-service:8004"
+    notificationServiceUrl: "http://notification-service:8005"
+    profileServiceUrl: "http://profile-service:8006"
+    adminServiceUrl: "http://admin-service:8007"
+  dietService:
+    azureOpenaiDeploymentName: "placeholder-openai-deployment-name"
+    azureOpenaiApiVersion: "placeholder-openai-api-version"
+    azureServiceBusTopicName: "meal-reminders"
+  documentService:
+    azureStorageContainerName: "nutriai-documents"
+  frontend:
+    backendUrl: "http://api-gateway:8000"
+  notificationService:
+    azureServiceBusTopicName: "meal-reminders"
+    azureServiceBusSubscriptionName: "email-sender"
+    smtpHost: "smtp.gmail.com"
+    smtpPort: "587"
+    smtpFromEmail: "noreply@nutriai-health.com"
+    appUrl: "https://dev.nutriai.example.com"
+

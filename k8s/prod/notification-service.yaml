@@ -37,15 +37,30 @@ spec:
                   name: notification-service-secrets
                   key: AZURE_SERVICE_BUS_CONNECTION_STRING
             - name: AZURE_SERVICE_BUS_TOPIC_NAME
-              value: "meal-reminders"
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-service-config
+                  key: AZURE_SERVICE_BUS_TOPIC_NAME
             - name: AZURE_SERVICE_BUS_SUBSCRIPTION_NAME
-              value: "email-sender"
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-service-config
+                  key: AZURE_SERVICE_BUS_SUBSCRIPTION_NAME
             - name: SMTP_HOST
-              value: "smtp.gmail.com"
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-service-config
+                  key: SMTP_HOST
             - name: SMTP_PORT
-              value: "587"
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-service-config
+                  key: SMTP_PORT
             - name: SMTP_FROM_EMAIL
-              value: "noreply@nutriai-health.com"
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-service-config
+                  key: SMTP_FROM_EMAIL
             - name: SMTP_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -57,7 +72,10 @@ spec:
                   name: notification-service-secrets
                   key: SMTP_PASSWORD
             - name: APP_URL
-              value: "https://nutriai.example.com"
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-service-config
+                  key: APP_URL
           volumeMounts:
             - name: secrets-store-inline
               mountPath: "/mnt/secrets-store"

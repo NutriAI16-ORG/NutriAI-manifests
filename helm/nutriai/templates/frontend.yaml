@@ -25,7 +25,10 @@ spec:
             - containerPort: 80
           env:
             - name: BACKEND_URL
-              value: "http://api-gateway:8000"
+              valueFrom:
+                configMapKeyRef:
+                  name: frontend-config
+                  key: BACKEND_URL
           resources:
             requests:
               memory: "128Mi"

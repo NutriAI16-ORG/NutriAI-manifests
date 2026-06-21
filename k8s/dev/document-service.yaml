@@ -37,7 +37,10 @@ spec:
                   name: document-service-secrets
                   key: AZURE_STORAGE_CONNECTION_STRING
             - name: AZURE_STORAGE_CONTAINER_NAME
-              value: "nutriai-documents"
+              valueFrom:
+                configMapKeyRef:
+                  name: document-service-config
+                  key: AZURE_STORAGE_CONTAINER_NAME
             - name: AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT
               valueFrom:
                 secretKeyRef:

@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-gateway-config
+  namespace: {{ .Values.namespace }}
+data:
+  AUTH_SERVICE_URL: {{ .Values.config.apiGateway.authServiceUrl | quote }}
+  DOCUMENT_SERVICE_URL: {{ .Values.config.apiGateway.documentServiceUrl | quote }}
+  DIET_SERVICE_URL: {{ .Values.config.apiGateway.dietServiceUrl | quote }}
+  HEALTH_SERVICE_URL: {{ .Values.config.apiGateway.healthServiceUrl | quote }}
+  NOTIFICATION_SERVICE_URL: {{ .Values.config.apiGateway.notificationServiceUrl | quote }}
+  PROFILE_SERVICE_URL: {{ .Values.config.apiGateway.profileServiceUrl | quote }}
+  ADMIN_SERVICE_URL: {{ .Values.config.apiGateway.adminServiceUrl | quote }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: diet-service-config
+  namespace: {{ .Values.namespace }}
+data:
+  AZURE_OPENAI_DEPLOYMENT_NAME: {{ .Values.config.dietService.azureOpenaiDeploymentName | quote }}
+  AZURE_OPENAI_API_VERSION: {{ .Values.config.dietService.azureOpenaiApiVersion | quote }}
+  AZURE_SERVICE_BUS_TOPIC_NAME: {{ .Values.config.dietService.azureServiceBusTopicName | quote }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: document-service-config
+  namespace: {{ .Values.namespace }}
+data:
+  AZURE_STORAGE_CONTAINER_NAME: {{ .Values.config.documentService.azureStorageContainerName | quote }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: {{ .Values.namespace }}
+data:
+  BACKEND_URL: {{ .Values.config.frontend.backendUrl | quote }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notification-service-config
+  namespace: {{ .Values.namespace }}
+data:
+  AZURE_SERVICE_BUS_TOPIC_NAME: {{ .Values.config.notificationService.azureServiceBusTopicName | quote }}
+  AZURE_SERVICE_BUS_SUBSCRIPTION_NAME: {{ .Values.config.notificationService.azureServiceBusSubscriptionName | quote }}
+  SMTP_HOST: {{ .Values.config.notificationService.smtpHost | quote }}
+  SMTP_PORT: {{ .Values.config.notificationService.smtpPort | quote }}
+  SMTP_FROM_EMAIL: {{ .Values.config.notificationService.smtpFromEmail | quote }}
+  APP_URL: {{ .Values.config.notificationService.appUrl | quote }}

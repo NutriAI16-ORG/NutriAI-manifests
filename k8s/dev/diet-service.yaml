@@ -42,16 +42,25 @@ spec:
                   name: diet-service-secrets
                   key: AZURE_OPENAI_KEY
             - name: AZURE_OPENAI_DEPLOYMENT_NAME
-              value: "placeholder-openai-deployment-name"
+              valueFrom:
+                configMapKeyRef:
+                  name: diet-service-config
+                  key: AZURE_OPENAI_DEPLOYMENT_NAME
             - name: AZURE_OPENAI_API_VERSION
-              value: "placeholder-openai-api-version"
+              valueFrom:
+                configMapKeyRef:
+                  name: diet-service-config
+                  key: AZURE_OPENAI_API_VERSION
             - name: AZURE_SERVICE_BUS_CONNECTION_STRING
               valueFrom:
                 secretKeyRef:
                   name: diet-service-secrets
                   key: AZURE_SERVICE_BUS_CONNECTION_STRING
             - name: AZURE_SERVICE_BUS_TOPIC_NAME
-              value: "meal-reminders"
+              valueFrom:
+                configMapKeyRef:
+                  name: diet-service-config
+                  key: AZURE_SERVICE_BUS_TOPIC_NAME
           volumeMounts:
             - name: secrets-store-inline
               mountPath: "/mnt/secrets-store"
