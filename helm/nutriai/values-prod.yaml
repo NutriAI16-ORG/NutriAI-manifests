@@ -10,7 +10,7 @@ ingress:
 admin-service:
   replicas: 1
   image:
-    tag: v0.0.2
+    tag: v0.0.3
 api-gateway:
   replicas: 2
   image:
