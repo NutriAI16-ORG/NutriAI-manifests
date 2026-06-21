@@ -18,7 +18,7 @@ api-gateway:
 auth-service:
   replicas: 2
   image:
-    tag: v0.0.5
+    tag: v0.0.6
 diet-service:
   replicas: 2
   image:
