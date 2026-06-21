@@ -1,0 +1,749 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: nutriai-dev
+  labels:
+    app: api-gateway
+    app.kubernetes.io/part-of: nutriai
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: nutriai-service-account
+      containers:
+        - name: api-gateway
+          image: nutriaiacr1602.azurecr.io/api-gateway:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: api-gateway-secrets
+                  key: DATABASE_URL
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: api-gateway-secrets
+                  key: JWT_SECRET_KEY
+            - name: AUTH_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: AUTH_SERVICE_URL
+            - name: DOCUMENT_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: DOCUMENT_SERVICE_URL
+            - name: DIET_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: DIET_SERVICE_URL
+            - name: HEALTH_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: HEALTH_SERVICE_URL
+            - name: NOTIFICATION_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: NOTIFICATION_SERVICE_URL
+            - name: PROFILE_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: PROFILE_SERVICE_URL
+            - name: ADMIN_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: ADMIN_SERVICE_URL
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "api-gateway-secret-provider"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-service
+  namespace: nutriai-dev
+  labels:
+    app: admin-service
+    app.kubernetes.io/part-of: nutriai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin-service
+  template:
+    metadata:
+      labels:
+        app: admin-service
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: nutriai-service-account
+      containers:
+        - name: admin-service
+          image: nutriaiacr1602.azurecr.io/admin-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8007
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: admin-service-secrets
+                  key: DATABASE_URL
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8007
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8007
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "admin-service-secret-provider"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+  namespace: nutriai-dev
+  labels:
+    app: auth-service
+    app.kubernetes.io/part-of: nutriai
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: auth-service
+  template:
+    metadata:
+      labels:
+        app: auth-service
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: nutriai-service-account
+      containers:
+        - name: auth-service
+          image: nutriaiacr1602.azurecr.io/auth-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8001
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secrets
+                  key: DATABASE_URL
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secrets
+                  key: JWT_SECRET_KEY
+            - name: ENTRA_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secrets
+                  key: ENTRA_CLIENT_ID
+            - name: ENTRA_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secrets
+                  key: ENTRA_CLIENT_SECRET
+            - name: ENTRA_TENANT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secrets
+                  key: ENTRA_TENANT_ID
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8001
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8001
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "auth-service-secret-provider"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: diet-service
+  namespace: nutriai-dev
+  labels:
+    app: diet-service
+    app.kubernetes.io/part-of: nutriai
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: diet-service
+  template:
+    metadata:
+      labels:
+        app: diet-service
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: nutriai-service-account
+      containers:
+        - name: diet-service
+          image: nutriaiacr1602.azurecr.io/diet-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8003
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: diet-service-secrets
+                  key: DATABASE_URL
+            - name: AZURE_OPENAI_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: diet-service-secrets
+                  key: AZURE_OPENAI_ENDPOINT
+            - name: AZURE_OPENAI_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: diet-service-secrets
+                  key: AZURE_OPENAI_KEY
+            - name: AZURE_OPENAI_DEPLOYMENT_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: diet-service-config
+                  key: AZURE_OPENAI_DEPLOYMENT_NAME
+            - name: AZURE_OPENAI_API_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  name: diet-service-config
+                  key: AZURE_OPENAI_API_VERSION
+            - name: AZURE_SERVICE_BUS_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: diet-service-secrets
+                  key: AZURE_SERVICE_BUS_CONNECTION_STRING
+            - name: AZURE_SERVICE_BUS_TOPIC_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: diet-service-config
+                  key: AZURE_SERVICE_BUS_TOPIC_NAME
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8003
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8003
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "diet-service-secret-provider"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: document-service
+  namespace: nutriai-dev
+  labels:
+    app: document-service
+    app.kubernetes.io/part-of: nutriai
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: document-service
+  template:
+    metadata:
+      labels:
+        app: document-service
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: nutriai-service-account
+      containers:
+        - name: document-service
+          image: nutriaiacr1602.azurecr.io/document-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8002
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: document-service-secrets
+                  key: DATABASE_URL
+            - name: AZURE_STORAGE_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: document-service-secrets
+                  key: AZURE_STORAGE_CONNECTION_STRING
+            - name: AZURE_STORAGE_CONTAINER_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: document-service-config
+                  key: AZURE_STORAGE_CONTAINER_NAME
+            - name: AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: document-service-secrets
+                  key: AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT
+            - name: AZURE_DOCUMENT_INTELLIGENCE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: document-service-secrets
+                  key: AZURE_DOCUMENT_INTELLIGENCE_KEY
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8002
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8002
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "document-service-secret-provider"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: nutriai-dev
+  labels:
+    app: frontend
+    app.kubernetes.io/part-of: nutriai
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: nutriaiacr1602.azurecr.io/frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: BACKEND_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: frontend-config
+                  key: BACKEND_URL
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: health-service
+  namespace: nutriai-dev
+  labels:
+    app: health-service
+    app.kubernetes.io/part-of: nutriai
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: health-service
+  template:
+    metadata:
+      labels:
+        app: health-service
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: nutriai-service-account
+      containers:
+        - name: health-service
+          image: nutriaiacr1602.azurecr.io/health-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8004
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: health-service-secrets
+                  key: DATABASE_URL
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8004
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8004
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "health-service-secret-provider"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+  namespace: nutriai-dev
+  labels:
+    app: notification-service
+    app.kubernetes.io/part-of: nutriai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: nutriai-service-account
+      containers:
+        - name: notification-service
+          image: nutriaiacr1602.azurecr.io/notification-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8005
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: notification-service-secrets
+                  key: DATABASE_URL
+            - name: AZURE_SERVICE_BUS_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: notification-service-secrets
+                  key: AZURE_SERVICE_BUS_CONNECTION_STRING
+            - name: AZURE_SERVICE_BUS_TOPIC_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-service-config
+                  key: AZURE_SERVICE_BUS_TOPIC_NAME
+            - name: AZURE_SERVICE_BUS_SUBSCRIPTION_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-service-config
+                  key: AZURE_SERVICE_BUS_SUBSCRIPTION_NAME
+            - name: SMTP_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-service-config
+                  key: SMTP_HOST
+            - name: SMTP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-service-config
+                  key: SMTP_PORT
+            - name: SMTP_FROM_EMAIL
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-service-config
+                  key: SMTP_FROM_EMAIL
+            - name: SMTP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: notification-service-secrets
+                  key: SMTP_USERNAME
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: notification-service-secrets
+                  key: SMTP_PASSWORD
+            - name: APP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-service-config
+                  key: APP_URL
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8005
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8005
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "notification-service-secret-provider"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profile-service
+  namespace: nutriai-dev
+  labels:
+    app: profile-service
+    app.kubernetes.io/part-of: nutriai
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: profile-service
+  template:
+    metadata:
+      labels:
+        app: profile-service
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: nutriai-service-account
+      containers:
+        - name: profile-service
+          image: nutriaiacr1602.azurecr.io/profile-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8006
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: profile-service-secrets
+                  key: DATABASE_URL
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8006
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8006
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "profile-service-secret-provider"
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: diet-service-hpa
+  namespace: nutriai-dev
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: diet-service
+  minReplicas: 2
+  maxReplicas: 3
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 75
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: frontend-hpa
+  namespace: nutriai-dev
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: frontend
+  minReplicas: 2
+  maxReplicas: 3
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 75
