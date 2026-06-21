@@ -44,7 +44,7 @@ health-service:
 notification-service:
   replicas: 1
   image:
-    tag: v0.0.4
+    tag: v0.0.5
 profile-service:
   replicas: 2
   image:
