@@ -1,0 +1,6 @@
+apiVersion: v2
+name: nutriai
+description: An umbrella Helm chart for all NutriAI services
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

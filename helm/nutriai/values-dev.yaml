@@ -1,0 +1,62 @@
+namespace: nutriai-dev
+keyvaultName: nutriai-kv-dev
+clientID: dev-identity-client-id
+tenantId: placeholder-entra-tenant-id-dev
+
+image:
+  registry: nutriaiacr1602.azurecr.io
+  pullPolicy: Always
+
+ingress:
+  host: dev.nutriai.example.com
+
+admin-service:
+  replicas: 1
+  image:
+    tag: latest
+
+api-gateway:
+  replicas: 2
+  image:
+    tag: latest
+
+auth-service:
+  replicas: 2
+  image:
+    tag: latest
+
+diet-service:
+  replicas: 2
+  image:
+    tag: latest
+  hpa:
+    minReplicas: 2
+    maxReplicas: 3
+
+document-service:
+  replicas: 2
+  image:
+    tag: latest
+
+frontend:
+  replicas: 2
+  image:
+    tag: latest
+  hpa:
+    minReplicas: 2
+    maxReplicas: 3
+
+health-service:
+  replicas: 2
+  image:
+    tag: latest
+
+notification-service:
+  replicas: 1
+  image:
+    tag: latest
+
+profile-service:
+  replicas: 2
+  image:
+    tag: latest

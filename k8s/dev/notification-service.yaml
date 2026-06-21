@@ -1,0 +1,103 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+  namespace: nutriai-dev
+  labels:
+    app: notification-service
+    app.kubernetes.io/part-of: nutriai
+spec:
+  replicas: 1  # Single replica is used to ensure sequential Service Bus consumer processing
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: nutriai-service-account
+      containers:
+        - name: notification-service
+          image: nutriaiacr1602.azurecr.io/notification-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8005
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: notification-service-secrets
+                  key: DATABASE_URL
+            - name: AZURE_SERVICE_BUS_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: notification-service-secrets
+                  key: AZURE_SERVICE_BUS_CONNECTION_STRING
+            - name: AZURE_SERVICE_BUS_TOPIC_NAME
+              value: "meal-reminders"
+            - name: AZURE_SERVICE_BUS_SUBSCRIPTION_NAME
+              value: "email-sender"
+            - name: SMTP_HOST
+              value: "smtp.gmail.com"
+            - name: SMTP_PORT
+              value: "587"
+            - name: SMTP_FROM_EMAIL
+              value: "noreply@nutriai-health.com"
+            - name: SMTP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: notification-service-secrets
+                  key: SMTP_USERNAME
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: notification-service-secrets
+                  key: SMTP_PASSWORD
+            - name: APP_URL
+              value: "https://nutriai.example.com"
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8005
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8005
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "notification-service-secret-provider"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+  namespace: nutriai-dev
+spec:
+  selector:
+    app: notification-service
+  ports:
+    - port: 8005
+      targetPort: 8005
+  type: ClusterIP

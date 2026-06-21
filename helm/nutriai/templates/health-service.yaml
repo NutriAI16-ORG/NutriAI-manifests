@@ -1,0 +1,76 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: health-service
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: health-service
+    app.kubernetes.io/part-of: nutriai
+spec:
+  replicas: {{ (index .Values "health-service").replicas }}
+  selector:
+    matchLabels:
+      app: health-service
+  template:
+    metadata:
+      labels:
+        app: health-service
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: nutriai-service-account
+      containers:
+        - name: health-service
+          image: "{{ .Values.image.registry }}/health-service:{{ (index .Values "health-service").image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 8004
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: health-service-secrets
+                  key: DATABASE_URL
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8004
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8004
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "health-service-secret-provider"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: health-service
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: health-service
+  ports:
+    - port: 8004
+      targetPort: 8004
+  type: ClusterIP

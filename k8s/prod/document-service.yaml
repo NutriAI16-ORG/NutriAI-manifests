@@ -1,0 +1,93 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: document-service
+  namespace: nutriai-prod
+  labels:
+    app: document-service
+    app.kubernetes.io/part-of: nutriai
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: document-service
+  template:
+    metadata:
+      labels:
+        app: document-service
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: nutriai-service-account
+      containers:
+        - name: document-service
+          image: nutriaiacr1602.azurecr.io/document-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8002
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: document-service-secrets
+                  key: DATABASE_URL
+            - name: AZURE_STORAGE_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: document-service-secrets
+                  key: AZURE_STORAGE_CONNECTION_STRING
+            - name: AZURE_STORAGE_CONTAINER_NAME
+              value: "nutriai-documents"
+            - name: AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: document-service-secrets
+                  key: AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT
+            - name: AZURE_DOCUMENT_INTELLIGENCE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: document-service-secrets
+                  key: AZURE_DOCUMENT_INTELLIGENCE_KEY
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8002
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8002
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "document-service-secret-provider"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: document-service
+  namespace: nutriai-prod
+spec:
+  selector:
+    app: document-service
+  ports:
+    - port: 8002
+      targetPort: 8002
+  type: ClusterIP
