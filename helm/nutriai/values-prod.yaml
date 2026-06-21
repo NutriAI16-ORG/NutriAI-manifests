@@ -2,29 +2,23 @@ namespace: nutriai-prod
 keyvaultName: nutriai-kv-prod
 clientID: prod-identity-client-id
 tenantId: placeholder-entra-tenant-id-prod
-
 image:
   registry: nutriaiacr1602.azurecr.io
   pullPolicy: Always
-
 ingress:
   host: nutriai.example.com
-
 admin-service:
   replicas: 1
   image:
-    tag: latest
-
+    tag: v0.0.1
 api-gateway:
   replicas: 2
   image:
     tag: latest
-
 auth-service:
   replicas: 2
   image:
     tag: latest
-
 diet-service:
   replicas: 2
   image:
@@ -32,12 +26,10 @@ diet-service:
   hpa:
     minReplicas: 2
     maxReplicas: 5
-
 document-service:
   replicas: 2
   image:
     tag: latest
-
 frontend:
   replicas: 2
   image:
@@ -45,17 +37,14 @@ frontend:
   hpa:
     minReplicas: 2
     maxReplicas: 5
-
 health-service:
   replicas: 2
   image:
     tag: latest
-
 notification-service:
   replicas: 1
   image:
     tag: latest
-
 profile-service:
   replicas: 2
   image:
