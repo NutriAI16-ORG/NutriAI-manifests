@@ -48,4 +48,4 @@ notification-service:
 profile-service:
   replicas: 2
   image:
-    tag: latest
+    tag: v0.0.1
