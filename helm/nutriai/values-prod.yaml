@@ -29,7 +29,7 @@ diet-service:
 document-service:
   replicas: 2
   image:
-    tag: v0.0.1
+    tag: v0.0.2
 frontend:
   replicas: 2
   image:
