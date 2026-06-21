@@ -51,4 +51,4 @@ profile-service:
     tag: v0.0.3
 api-gateway-service:
   image:
-    tag: v0.0.4
+    tag: v0.0.5
