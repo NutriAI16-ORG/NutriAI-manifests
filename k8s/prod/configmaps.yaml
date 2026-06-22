@@ -18,9 +18,11 @@ metadata:
   name: diet-service-config
   namespace: nutriai-prod
 data:
-  AZURE_OPENAI_DEPLOYMENT_NAME: "placeholder-openai-deployment-name"
-  AZURE_OPENAI_API_VERSION: "placeholder-openai-api-version"
-  AZURE_SERVICE_BUS_TOPIC_NAME: "meal-reminders"
+  AZURE_OPENAI_DEPLOYMENT_NAME: "gpt-5.1"
+  AZURE_OPENAI_API_VERSION: "2025-11-13"
+  AZURE_SERVICE_BUS_TOPIC_NAME: "email-notifications"
+  # AZURE_SERVICE_BUS_FULLY_QUALIFIED_NAMESPACE used by notification-service for Workload Identity auth
+  AZURE_SERVICE_BUS_FULLY_QUALIFIED_NAMESPACE: "nutriai-sb-prod.servicebus.windows.net"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -44,8 +46,10 @@ metadata:
   name: notification-service-config
   namespace: nutriai-prod
 data:
-  AZURE_SERVICE_BUS_TOPIC_NAME: "meal-reminders"
+  AZURE_SERVICE_BUS_TOPIC_NAME: "email-notifications"
   AZURE_SERVICE_BUS_SUBSCRIPTION_NAME: "email-sender"
+  # AZURE_SERVICE_BUS_FULLY_QUALIFIED_NAMESPACE used for Workload Identity auth in AKS (no connection string needed)
+  AZURE_SERVICE_BUS_FULLY_QUALIFIED_NAMESPACE: "nutriai-sb-prod.servicebus.windows.net"
   SMTP_HOST: "smtp.gmail.com"
   SMTP_PORT: "587"
   SMTP_FROM_EMAIL: "noreply@nutriai-health.com"

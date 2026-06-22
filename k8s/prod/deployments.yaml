@@ -217,6 +217,11 @@ spec:
                 secretKeyRef:
                   name: auth-service-secrets
                   key: ENTRA_TENANT_ID
+            - name: ENTRA_REDIRECT_URI
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secrets
+                  key: ENTRA_REDIRECT_URI
           volumeMounts:
             - name: secrets-store-inline
               mountPath: "/mnt/secrets-store"
@@ -300,11 +305,12 @@ spec:
                 configMapKeyRef:
                   name: diet-service-config
                   key: AZURE_OPENAI_API_VERSION
-            - name: AZURE_SERVICE_BUS_CONNECTION_STRING
+            # No AZURE_SERVICE_BUS_CONNECTION_STRING in prod — app uses DefaultAzureCredential via Workload Identity
+            - name: AZURE_SERVICE_BUS_FULLY_QUALIFIED_NAMESPACE
               valueFrom:
-                secretKeyRef:
-                  name: diet-service-secrets
-                  key: AZURE_SERVICE_BUS_CONNECTION_STRING
+                configMapKeyRef:
+                  name: diet-service-config
+                  key: AZURE_SERVICE_BUS_FULLY_QUALIFIED_NAMESPACE
             - name: AZURE_SERVICE_BUS_TOPIC_NAME
               valueFrom:
                 configMapKeyRef:
@@ -569,11 +575,12 @@ spec:
                 secretKeyRef:
                   name: notification-service-secrets
                   key: DATABASE_URL
-            - name: AZURE_SERVICE_BUS_CONNECTION_STRING
+            # No AZURE_SERVICE_BUS_CONNECTION_STRING in prod — app uses DefaultAzureCredential via Workload Identity
+            - name: AZURE_SERVICE_BUS_FULLY_QUALIFIED_NAMESPACE
               valueFrom:
-                secretKeyRef:
-                  name: notification-service-secrets
-                  key: AZURE_SERVICE_BUS_CONNECTION_STRING
+                configMapKeyRef:
+                  name: notification-service-config
+                  key: AZURE_SERVICE_BUS_FULLY_QUALIFIED_NAMESPACE
             - name: AZURE_SERVICE_BUS_TOPIC_NAME
               valueFrom:
                 configMapKeyRef:
