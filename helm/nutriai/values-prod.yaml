@@ -1,5 +1,5 @@
 namespace: nutriai-prod
-keyvaultName: nutriai-kv-prod
+keyvaultName: nutriai-kv-prod-v2
 clientID: prod-identity-client-id
 tenantId: placeholder-entra-tenant-id-prod
 image:

@@ -1,5 +1,5 @@
 namespace: nutriai-dev
-keyvaultName: nutriai-kv-dev
+keyvaultName: nutriai-kv-dev-v2
 clientID: dev-identity-client-id
 tenantId: placeholder-entra-tenant-id-dev
 
