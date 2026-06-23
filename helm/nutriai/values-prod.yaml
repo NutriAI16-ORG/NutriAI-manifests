@@ -1,9 +1,9 @@
 namespace: nutriai-prod
-keyvaultName: nutriai-kv-prod-v2
-clientID: prod-identity-client-id
-tenantId: placeholder-entra-tenant-id-prod
+keyvaultName: nutriai-kv-prod-v3
+clientID: c9c04b34-93e4-4c93-a27c-7c6aa3c88e80
+tenantId: cb69c701-1ad6-4282-bcda-0982701e13a6
 image:
-  registry: nutriaiacr1602.azurecr.io
+  registry: nutriaiacrprod.azurecr.io
   pullPolicy: Always
 ingress:
   host: nutriai.example.com
@@ -64,13 +64,13 @@ config:
   dietService:
     azureOpenaiDeploymentName: "placeholder-openai-deployment-name"
     azureOpenaiApiVersion: "placeholder-openai-api-version"
-    azureServiceBusTopicName: "meal-reminders"
+    azureServiceBusTopicName: "email-notifications"
   documentService:
     azureStorageContainerName: "nutriai-documents"
   frontend:
     backendUrl: "http://api-gateway:8000"
   notificationService:
-    azureServiceBusTopicName: "meal-reminders"
+    azureServiceBusTopicName: "email-notifications"
     azureServiceBusSubscriptionName: "email-sender"
     smtpHost: "smtp.gmail.com"
     smtpPort: "587"
