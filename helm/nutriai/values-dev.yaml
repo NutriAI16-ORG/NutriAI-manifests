@@ -71,8 +71,8 @@ config:
     profileServiceUrl: "http://profile-service:8006"
     adminServiceUrl: "http://admin-service:8007"
   dietService:
-    azureOpenaiDeploymentName: "placeholder-openai-deployment-name"
-    azureOpenaiApiVersion: "placeholder-openai-api-version"
+    azureOpenaiDeploymentName: "gpt-5.1"
+    azureOpenaiApiVersion: "2025-11-13"
     azureServiceBusTopicName: "email-notifications"
     azureServiceBusFullyQualifiedNamespace: "nutriai-sb-dev.servicebus.windows.net"
   documentService:
