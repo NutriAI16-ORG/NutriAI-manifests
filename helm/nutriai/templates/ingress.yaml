@@ -4,7 +4,6 @@ metadata:
   name: nutriai-ingress
   namespace: {{ .Values.namespace }}
   annotations:
-    kubernetes.io/ingress.class: azure/application-gateway
     appgw.ingress.kubernetes.io/request-timeout: "60"
     appgw.ingress.kubernetes.io/connection-draining: "true"
     appgw.ingress.kubernetes.io/connection-draining-timeout: "30"
