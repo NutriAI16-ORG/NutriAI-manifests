@@ -21,6 +21,7 @@ data:
   AZURE_OPENAI_DEPLOYMENT_NAME: {{ .Values.config.dietService.azureOpenaiDeploymentName | quote }}
   AZURE_OPENAI_API_VERSION: {{ .Values.config.dietService.azureOpenaiApiVersion | quote }}
   AZURE_SERVICE_BUS_TOPIC_NAME: {{ .Values.config.dietService.azureServiceBusTopicName | quote }}
+  AZURE_SERVICE_BUS_FULLY_QUALIFIED_NAMESPACE: {{ .Values.config.dietService.azureServiceBusFullyQualifiedNamespace | quote }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -46,6 +47,7 @@ metadata:
 data:
   AZURE_SERVICE_BUS_TOPIC_NAME: {{ .Values.config.notificationService.azureServiceBusTopicName | quote }}
   AZURE_SERVICE_BUS_SUBSCRIPTION_NAME: {{ .Values.config.notificationService.azureServiceBusSubscriptionName | quote }}
+  AZURE_SERVICE_BUS_FULLY_QUALIFIED_NAMESPACE: {{ .Values.config.notificationService.azureServiceBusFullyQualifiedNamespace | quote }}
   SMTP_HOST: {{ .Values.config.notificationService.smtpHost | quote }}
   SMTP_PORT: {{ .Values.config.notificationService.smtpPort | quote }}
   SMTP_FROM_EMAIL: {{ .Values.config.notificationService.smtpFromEmail | quote }}

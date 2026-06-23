@@ -74,6 +74,7 @@ config:
     azureOpenaiDeploymentName: "placeholder-openai-deployment-name"
     azureOpenaiApiVersion: "placeholder-openai-api-version"
     azureServiceBusTopicName: "email-notifications"
+    azureServiceBusFullyQualifiedNamespace: "nutriai-sb-dev.servicebus.windows.net"
   documentService:
     azureStorageContainerName: "nutriai-documents"
   frontend:
@@ -81,6 +82,7 @@ config:
   notificationService:
     azureServiceBusTopicName: "email-notifications"
     azureServiceBusSubscriptionName: "email-sender"
+    azureServiceBusFullyQualifiedNamespace: "nutriai-sb-dev.servicebus.windows.net"
     smtpHost: "smtp.gmail.com"
     smtpPort: "587"
     smtpFromEmail: "noreply@nutriai-health.com"
