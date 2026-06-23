@@ -63,7 +63,7 @@ config:
     adminServiceUrl: "http://admin-service:8007"
   dietService:
     azureOpenaiDeploymentName: "gpt-5.1"
-    azureOpenaiApiVersion: "2025-11-13"
+    azureOpenaiApiVersion: "2024-02-01"
     azureServiceBusTopicName: "email-notifications"
     azureServiceBusFullyQualifiedNamespace: "nutriai-sb-prod.servicebus.windows.net"
   documentService:
