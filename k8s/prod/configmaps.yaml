@@ -19,7 +19,7 @@ metadata:
   namespace: nutriai-prod
 data:
   AZURE_OPENAI_DEPLOYMENT_NAME: "gpt-5.1"
-  AZURE_OPENAI_API_VERSION: "2025-11-13"
+  AZURE_OPENAI_API_VERSION: "2024-02-01"
   AZURE_SERVICE_BUS_TOPIC_NAME: "email-notifications"
   # AZURE_SERVICE_BUS_FULLY_QUALIFIED_NAMESPACE used by notification-service for Workload Identity auth
   AZURE_SERVICE_BUS_FULLY_QUALIFIED_NAMESPACE: "nutriai-sb-prod.servicebus.windows.net"
@@ -31,6 +31,8 @@ metadata:
   namespace: nutriai-prod
 data:
   AZURE_STORAGE_CONTAINER_NAME: "nutriai-documents"
+  AZURE_OPENAI_DEPLOYMENT_NAME: "gpt-5.1"
+  AZURE_OPENAI_API_VERSION: "2024-02-01"
 ---
 apiVersion: v1
 kind: ConfigMap
