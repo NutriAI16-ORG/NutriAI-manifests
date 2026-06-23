@@ -77,6 +77,8 @@ config:
     azureServiceBusFullyQualifiedNamespace: "nutriai-sb-dev.servicebus.windows.net"
   documentService:
     azureStorageContainerName: "nutriai-documents"
+    azureOpenaiDeploymentName: "gpt-5.1"
+    azureOpenaiApiVersion: "2024-02-01"
   frontend:
     backendUrl: "http://api-gateway:8000"
   notificationService:

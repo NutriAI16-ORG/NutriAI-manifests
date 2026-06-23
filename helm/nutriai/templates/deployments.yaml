@@ -393,6 +393,26 @@ spec:
                 secretKeyRef:
                   name: document-service-secrets
                   key: AZURE_DOCUMENT_INTELLIGENCE_KEY
+            - name: AZURE_OPENAI_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: document-service-secrets
+                  key: AZURE_OPENAI_ENDPOINT
+            - name: AZURE_OPENAI_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: document-service-secrets
+                  key: AZURE_OPENAI_KEY
+            - name: AZURE_OPENAI_DEPLOYMENT_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: document-service-config
+                  key: AZURE_OPENAI_DEPLOYMENT_NAME
+            - name: AZURE_OPENAI_API_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  name: document-service-config
+                  key: AZURE_OPENAI_API_VERSION
           volumeMounts:
             - name: secrets-store-inline
               mountPath: "/mnt/secrets-store"

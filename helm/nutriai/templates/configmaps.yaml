@@ -30,6 +30,8 @@ metadata:
   namespace: {{ .Values.namespace }}
 data:
   AZURE_STORAGE_CONTAINER_NAME: {{ .Values.config.documentService.azureStorageContainerName | quote }}
+  AZURE_OPENAI_DEPLOYMENT_NAME: {{ .Values.config.documentService.azureOpenaiDeploymentName | quote }}
+  AZURE_OPENAI_API_VERSION: {{ .Values.config.documentService.azureOpenaiApiVersion | quote }}
 ---
 apiVersion: v1
 kind: ConfigMap
