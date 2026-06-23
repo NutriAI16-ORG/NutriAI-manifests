@@ -21,7 +21,7 @@ spec:
       serviceAccountName: nutriai-service-account
       containers:
         - name: api-gateway
-          image: "{{ .Values.image.registry }}/api-gateway:{{ (index .Values "api-gateway").image.tag }}"
+          image: "{{ .Values.image.registry }}/nutriai-api-gateway-service:{{ (index .Values "api-gateway").image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 8000
@@ -124,7 +124,7 @@ spec:
       serviceAccountName: nutriai-service-account
       containers:
         - name: admin-service
-          image: "{{ .Values.image.registry }}/admin-service:{{ (index .Values "admin-service").image.tag }}"
+          image: "{{ .Values.image.registry }}/nutriai-admin-service:{{ (index .Values "admin-service").image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 8007
@@ -187,7 +187,7 @@ spec:
       serviceAccountName: nutriai-service-account
       containers:
         - name: auth-service
-          image: "{{ .Values.image.registry }}/auth-service:{{ (index .Values "auth-service").image.tag }}"
+          image: "{{ .Values.image.registry }}/nutriai-auth-service:{{ (index .Values "auth-service").image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 8001
@@ -270,7 +270,7 @@ spec:
       serviceAccountName: nutriai-service-account
       containers:
         - name: diet-service
-          image: "{{ .Values.image.registry }}/diet-service:{{ (index .Values "diet-service").image.tag }}"
+          image: "{{ .Values.image.registry }}/nutriai-diet-service:{{ (index .Values "diet-service").image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 8003
@@ -363,7 +363,7 @@ spec:
       serviceAccountName: nutriai-service-account
       containers:
         - name: document-service
-          image: "{{ .Values.image.registry }}/document-service:{{ (index .Values "document-service").image.tag }}"
+          image: "{{ .Values.image.registry }}/nutriai-document-service:{{ (index .Values "document-service").image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 8002
@@ -444,7 +444,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: "{{ .Values.image.registry }}/frontend:{{ (index .Values "frontend").image.tag }}"
+          image: "{{ .Values.image.registry }}/nutriai-frontend:{{ (index .Values "frontend").image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 80
@@ -496,7 +496,7 @@ spec:
       serviceAccountName: nutriai-service-account
       containers:
         - name: health-service
-          image: "{{ .Values.image.registry }}/health-service:{{ (index .Values "health-service").image.tag }}"
+          image: "{{ .Values.image.registry }}/nutriai-health-service:{{ (index .Values "health-service").image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 8004
@@ -559,7 +559,7 @@ spec:
       serviceAccountName: nutriai-service-account
       containers:
         - name: notification-service
-          image: "{{ .Values.image.registry }}/notification-service:{{ (index .Values "notification-service").image.tag }}"
+          image: "{{ .Values.image.registry }}/nutriai-notification-service:{{ (index .Values "notification-service").image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 8005
@@ -667,7 +667,7 @@ spec:
       serviceAccountName: nutriai-service-account
       containers:
         - name: profile-service
-          image: "{{ .Values.image.registry }}/profile-service:{{ (index .Values "profile-service").image.tag }}"
+          image: "{{ .Values.image.registry }}/nutriai-profile-service:{{ (index .Values "profile-service").image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 8006
