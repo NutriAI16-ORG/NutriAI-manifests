@@ -8,7 +8,7 @@ image:
   pullPolicy: Always
 
 ingress:
-  host: dev.nutriai.example.com
+  host: ""
 
 admin-service:
   replicas: 1

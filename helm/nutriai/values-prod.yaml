@@ -6,7 +6,7 @@ image:
   registry: nutriaiacrprod.azurecr.io
   pullPolicy: Always
 ingress:
-  host: nutriai.example.com
+  host: ""
 admin-service:
   replicas: 1
   image:

@@ -9,9 +9,14 @@ metadata:
     appgw.ingress.kubernetes.io/connection-draining: "true"
     appgw.ingress.kubernetes.io/connection-draining-timeout: "30"
 spec:
+  ingressClassName: azure-application-gateway
   rules:
+    {{- if .Values.ingress.host }}
     - host: {{ .Values.ingress.host }}
       http:
+    {{- else }}
+    - http:
+    {{- end }}
         paths:
           - path: /api
             pathType: Prefix
