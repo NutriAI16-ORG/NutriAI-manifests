@@ -48,7 +48,7 @@ notification-service:
 profile-service:
   replicas: 2
   image:
-    tag: v0.0.6
+    tag: v0.0.7
 api-gateway-service:
   image:
     tag: v0.0.7
