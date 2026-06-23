@@ -22,7 +22,7 @@ auth-service:
 diet-service:
   replicas: 2
   image:
-    tag: v0.0.5
+    tag: v0.0.6
   hpa:
     minReplicas: 2
     maxReplicas: 5
