@@ -21,7 +21,7 @@ spec:
       serviceAccountName: nutriai-service-account
       containers:
         - name: api-gateway
-          image: nutriaiacr1602.azurecr.io/api-gateway:latest
+          image: nutriaiacrdev.azurecr.io/nutriai-api-gateway-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
@@ -124,7 +124,7 @@ spec:
       serviceAccountName: nutriai-service-account
       containers:
         - name: admin-service
-          image: nutriaiacr1602.azurecr.io/admin-service:latest
+          image: nutriaiacrdev.azurecr.io/nutriai-admin-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8007
@@ -187,7 +187,7 @@ spec:
       serviceAccountName: nutriai-service-account
       containers:
         - name: auth-service
-          image: nutriaiacr1602.azurecr.io/auth-service:latest
+          image: nutriaiacrdev.azurecr.io/nutriai-auth-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8001
@@ -275,7 +275,7 @@ spec:
       serviceAccountName: nutriai-service-account
       containers:
         - name: diet-service
-          image: nutriaiacr1602.azurecr.io/diet-service:latest
+          image: nutriaiacrdev.azurecr.io/nutriai-diet-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8003
@@ -369,7 +369,7 @@ spec:
       serviceAccountName: nutriai-service-account
       containers:
         - name: document-service
-          image: nutriaiacr1602.azurecr.io/document-service:latest
+          image: nutriaiacrdev.azurecr.io/nutriai-document-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8002
@@ -450,7 +450,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: nutriaiacr1602.azurecr.io/frontend:latest
+          image: nutriaiacrdev.azurecr.io/nutriai-frontend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -502,7 +502,7 @@ spec:
       serviceAccountName: nutriai-service-account
       containers:
         - name: health-service
-          image: nutriaiacr1602.azurecr.io/health-service:latest
+          image: nutriaiacrdev.azurecr.io/nutriai-health-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8004
@@ -565,7 +565,7 @@ spec:
       serviceAccountName: nutriai-service-account
       containers:
         - name: notification-service
-          image: nutriaiacr1602.azurecr.io/notification-service:latest
+          image: nutriaiacrdev.azurecr.io/nutriai-notification-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8005
@@ -674,7 +674,7 @@ spec:
       serviceAccountName: nutriai-service-account
       containers:
         - name: profile-service
-          image: nutriaiacr1602.azurecr.io/profile-service:latest
+          image: nutriaiacrdev.azurecr.io/nutriai-profile-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8006
