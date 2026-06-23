@@ -51,7 +51,7 @@ profile-service:
     tag: v0.0.6
 api-gateway-service:
   image:
-    tag: v0.0.6
+    tag: v0.0.7
 config:
   apiGateway:
     authServiceUrl: "http://auth-service:8001"
