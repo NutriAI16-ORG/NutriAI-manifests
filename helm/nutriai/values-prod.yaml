@@ -21,7 +21,7 @@ auth-service:
   enabled: true
   replicas: 2
   image:
-    tag: v0.0.10
+    tag: v0.1.0
 diet-service:
   enabled: true
   replicas: 2
