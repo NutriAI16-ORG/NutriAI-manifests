@@ -171,24 +171,78 @@ az keyvault certificate import \
 
 ---
 
-## 🛡️ Phase 4: Grant Key Vault Access to Application Gateway
+## 🛡️ Phase 4: Grant Key Vault Access & Link Certificate to Application Gateway
 
-Ensure that the Application Gateway's Managed Identity (AGIC) has certificate read access. Run these commands using the User-Assigned Managed Identity's Object ID:
+Because the Azure Portal has a hard limitation where it **does not support linking Key Vault certificates that use the Azure RBAC model**, you must perform the linkage using the Azure CLI.
+
+Here are the step-by-step commands to assign the correct identity, grant access permissions, and link the certificate to the gateway.
+
+### 1. Assign the Managed Identity to the Application Gateway
+Before the Application Gateway can talk to Key Vault, the User-Assigned Managed Identity (AGIC identity) must be assigned directly to the Application Gateway resource:
 
 ```bash
-# Grant access to Prod Key Vault
+# Assign the identity to the Production Application Gateway
+az network application-gateway identity assign \
+  --gateway-name "nutriai-appgw-prod" \
+  --resource-group "nutriai-rg-prod" \
+  --identity "/subscriptions/<YOUR_SUBSCRIPTION_ID>/resourcegroups/MC_nutriai-rg-prod_nutriai-aks-prod_eastus2/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ingressapplicationgateway-nutriai-aks-prod"
+```
+
+### 2. Grant Key Vault Access to the Identity
+To download a certificate with its private key, the gateway's identity requires both the **Certificates User** and **Secrets User** roles.
+
+Run the following commands to assign these roles:
+
+```bash
+# Grant "Certificates User" role (for metadata/public key)
 az role assignment create \
   --role "Key Vault Certificates User" \
-  --assignee-object-id <PROD_AGIC_IDENTITY_OBJECT_ID> \
+  --assignee-object-id "<PROD_AGIC_IDENTITY_OBJECT_ID>" \
   --scope "/subscriptions/<YOUR_SUBSCRIPTION_ID>/resourcegroups/nutriai-rg-prod/providers/Microsoft.KeyVault/vaults/nutriai-kv-prod-v3" \
   --assignee-principal-type "ServicePrincipal"
 
-# Grant access to Dev Key Vault
+# Grant "Secrets User" role (for private key retrieval)
 az role assignment create \
-  --role "Key Vault Certificates User" \
-  --assignee-object-id <DEV_AGIC_IDENTITY_OBJECT_ID> \
-  --scope "/subscriptions/<YOUR_SUBSCRIPTION_ID>/resourcegroups/nutriai-rg-dev/providers/Microsoft.KeyVault/vaults/nutriai-kv-dev-v3" \
+  --role "Key Vault Secrets User" \
+  --assignee-object-id "<PROD_AGIC_IDENTITY_OBJECT_ID>" \
+  --scope "/subscriptions/<YOUR_SUBSCRIPTION_ID>/resourcegroups/nutriai-rg-prod/providers/Microsoft.KeyVault/vaults/nutriai-kv-prod-v3" \
   --assignee-principal-type "ServicePrincipal"
+```
+
+### 3. Temporarily Open Key Vault Firewall
+Since Key Vault is locked down by default (`defaultAction = Deny`), temporarily open the firewall to allow our CLI and Azure backend to query the certificate:
+
+```bash
+# Open Key Vault firewall
+az keyvault update --name "nutriai-kv-prod-v3" --default-action Allow
+```
+
+### 4. Link the Certificate to the Application Gateway
+1. **Fetch the certificate Secret ID**:
+   ```bash
+   az keyvault certificate show \
+     --vault-name "nutriai-kv-prod-v3" \
+     --name "nutriai-tls-cert" \
+     --query sid -o tsv
+   ```
+2. **Remove the version GUID**:
+   Strip the version hash at the end of the URL (e.g. `/7a893e...`) to get the versionless URL:
+   `https://nutriai-kv-prod-v3.vault.azure.net/secrets/nutriai-tls-cert`
+3. **Run the linking command**:
+   ```bash
+   az network application-gateway ssl-cert create \
+     --gateway-name "nutriai-appgw-prod" \
+     --resource-group "nutriai-rg-prod" \
+     --name "nutriai-tls-cert" \
+     --key-vault-secret-id "https://nutriai-kv-prod-v3.vault.azure.net/secrets/nutriai-tls-cert"
+   ```
+
+### 5. Restore Key Vault Firewall Settings
+Immediately restore the Key Vault firewall back to `Deny` to secure your environment:
+
+```bash
+# Lock down Key Vault firewall
+az keyvault update --name "nutriai-kv-prod-v3" --default-action Deny
 ```
 
 ---
