@@ -1,3 +1,4 @@
+{{- if (index .Values "api-gateway").enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -13,7 +14,9 @@ data:
   NOTIFICATION_SERVICE_URL: {{ .Values.config.apiGateway.notificationServiceUrl | quote }}
   PROFILE_SERVICE_URL: {{ .Values.config.apiGateway.profileServiceUrl | quote }}
   ADMIN_SERVICE_URL: {{ .Values.config.apiGateway.adminServiceUrl | quote }}
+{{- end}}
 ---
+{{- if (index .Values "diet-service").enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -26,7 +29,9 @@ data:
   AZURE_OPENAI_API_VERSION: {{ .Values.config.dietService.azureOpenaiApiVersion | quote }}
   AZURE_SERVICE_BUS_TOPIC_NAME: {{ .Values.config.dietService.azureServiceBusTopicName | quote }}
   AZURE_SERVICE_BUS_FULLY_QUALIFIED_NAMESPACE: {{ .Values.config.dietService.azureServiceBusFullyQualifiedNamespace | quote }}
+{{- end}}
 ---
+{{- if (index .Values "document-service").enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -38,7 +43,9 @@ data:
   AZURE_STORAGE_CONTAINER_NAME: {{ .Values.config.documentService.azureStorageContainerName | quote }}
   AZURE_OPENAI_DEPLOYMENT_NAME: {{ .Values.config.documentService.azureOpenaiDeploymentName | quote }}
   AZURE_OPENAI_API_VERSION: {{ .Values.config.documentService.azureOpenaiApiVersion | quote }}
+{{- end}}
 ---
+{{- if (index .Values "frontend").enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -48,7 +55,9 @@ metadata:
     argocd.argoproj.io/sync-wave: "2"
 data:
   BACKEND_URL: {{ .Values.config.frontend.backendUrl | quote }}
+{{- end}}
 ---
+{{- if (index .Values "notification-service").enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -64,3 +73,4 @@ data:
   SMTP_PORT: {{ .Values.config.notificationService.smtpPort | quote }}
   SMTP_FROM_EMAIL: {{ .Values.config.notificationService.smtpFromEmail | quote }}
   APP_URL: {{ .Values.config.notificationService.appUrl | quote }}
+{{- end}}

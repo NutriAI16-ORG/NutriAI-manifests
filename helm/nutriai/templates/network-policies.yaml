@@ -33,7 +33,7 @@ spec:
       port: 53
     - protocol: TCP
       port: 53
----
+{{- if (index .Values "frontend").enabled }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -51,7 +51,9 @@ spec:
   - ports:
     - protocol: TCP
       port: 80
+{{- end}}
 ---
+{{- if (index .Values "api-gateway").enabled }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -99,6 +101,7 @@ spec:
       port: 8006
     - protocol: TCP
       port: 8007
+{{- end}}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy

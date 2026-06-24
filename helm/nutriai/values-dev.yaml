@@ -11,21 +11,25 @@ ingress:
   host: ""
 
 admin-service:
+  enabled: true
   replicas: 1
   image:
     tag: latest
 
 api-gateway:
+  enabled: true
   replicas: 2
   image:
     tag: latest
 
 auth-service:
+  enabled: true
   replicas: 2
   image:
     tag: latest
 
 diet-service:
+  enabled: true
   replicas: 2
   image:
     tag: latest
@@ -34,11 +38,13 @@ diet-service:
     maxReplicas: 3
 
 document-service:
+  enabled: true
   replicas: 2
   image:
     tag: latest
 
 frontend:
+  enabled: true
   replicas: 2
   image:
     tag: latest
@@ -47,16 +53,19 @@ frontend:
     maxReplicas: 3
 
 health-service:
+  enabled: true
   replicas: 2
   image:
     tag: latest
 
 notification-service:
+  enabled: true
   replicas: 1
   image:
     tag: latest
 
 profile-service:
+  enabled: true
   replicas: 2
   image:
     tag: latest
