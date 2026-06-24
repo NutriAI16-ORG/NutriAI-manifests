@@ -4,6 +4,39 @@ This guide outlines the exact, end-to-end steps to generate a single wildcard SS
 
 ---
 
+## 🔐 Azure Permissions & VM Identity Setup
+
+If you are running the `az keyvault certificate import` command from a self-hosted runner or a VM, the VM's **System-Assigned Managed Identity** (or the Service Principal running your pipeline) must be granted write permissions to the Key Vault.
+
+If your Key Vault uses **Azure RBAC** (Role-Based Access Control):
+1. **Role Needed**: **`Key Vault Certificates Officer`** (gives permission to import and manage certificates).
+2. **Command to Assign Role**:
+   Run this command from an account with Owner/User Access Administrator permissions (replace `<VM_IDENTITY_OBJECT_ID>` with your VM's System-Assigned Managed Identity Object ID):
+   ```bash
+   # Assign permissions for Production Key Vault
+   az role assignment create \
+     --role "Key Vault Certificates Officer" \
+     --assignee-object-id "<VM_IDENTITY_OBJECT_ID>" \
+     --scope "/subscriptions/<YOUR_SUBSCRIPTION_ID>/resourcegroups/nutriai-rg-prod/providers/Microsoft.KeyVault/vaults/nutriai-kv-prod-v3" \
+     --assignee-principal-type "ServicePrincipal"
+
+   # Assign permissions for Development Key Vault
+   az role assignment create \
+     --role "Key Vault Certificates Officer" \
+     --assignee-object-id "<VM_IDENTITY_OBJECT_ID>" \
+     --scope "/subscriptions/<YOUR_SUBSCRIPTION_ID>/resourcegroups/nutriai-rg-dev/providers/Microsoft.KeyVault/vaults/nutriai-kv-dev-v3" \
+     --assignee-principal-type "ServicePrincipal"
+   ```
+
+If your Key Vault uses **Access Policies**:
+1. **Access Permissions Needed**: `Get`, `List`, `Import` under **Certificate permissions**.
+2. **Command to Assign Policy**:
+   ```bash
+   az keyvault set-policy --name "nutriai-kv-prod-v3" --object-id "<VM_IDENTITY_OBJECT_ID>" --certificate-permissions get list import
+   ```
+
+---
+
 ## 📋 Target Subdomain Mapping
 A single wildcard certificate for `*.nutriai.buzz` and `nutriai.buzz` will cover all three destinations:
 * **Production App**: `https://nutriai.buzz`
@@ -65,13 +98,13 @@ If you are running locally on Windows:
 
 ## 🔑 Phase 2: Generate the Wildcard Certificate
 
-We will use Let's Encrypt (Certbot) to issue a single wildcard certificate using your email: **`20211cst0039@gmail.com`**.
+We will use Let's Encrypt (Certbot) to issue a single wildcard certificate using your email: **`<YOUR_EMAIL_ADDRESS>`**.
 
 ### 1. Run the Certbot DNS Challenge
 Run this command to request a certificate covering both the root domain and all subdomains:
 ```bash
 sudo certbot certonly --manual --preferred-challenges dns \
-  --email "20211cst0039@gmail.com" \
+  --email "<YOUR_EMAIL_ADDRESS>" \
   --agree-tos \
   --no-eff-email \
   -d "nutriai.buzz" \
@@ -147,14 +180,14 @@ Ensure that the Application Gateway's Managed Identity (AGIC) has certificate re
 az role assignment create \
   --role "Key Vault Certificates User" \
   --assignee-object-id <PROD_AGIC_IDENTITY_OBJECT_ID> \
-  --scope "/subscriptions/754a76d8-4c3e-48dd-bb6e-72e50230f808/resourcegroups/nutriai-rg-prod/providers/Microsoft.KeyVault/vaults/nutriai-kv-prod-v3" \
+  --scope "/subscriptions/<YOUR_SUBSCRIPTION_ID>/resourcegroups/nutriai-rg-prod/providers/Microsoft.KeyVault/vaults/nutriai-kv-prod-v3" \
   --assignee-principal-type "ServicePrincipal"
 
 # Grant access to Dev Key Vault
 az role assignment create \
   --role "Key Vault Certificates User" \
   --assignee-object-id <DEV_AGIC_IDENTITY_OBJECT_ID> \
-  --scope "/subscriptions/754a76d8-4c3e-48dd-bb6e-72e50230f808/resourcegroups/nutriai-rg-dev/providers/Microsoft.KeyVault/vaults/nutriai-kv-dev-v3" \
+  --scope "/subscriptions/<YOUR_SUBSCRIPTION_ID>/resourcegroups/nutriai-rg-dev/providers/Microsoft.KeyVault/vaults/nutriai-kv-dev-v3" \
   --assignee-principal-type "ServicePrincipal"
 ```
 
