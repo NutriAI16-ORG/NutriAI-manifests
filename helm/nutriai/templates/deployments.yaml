@@ -228,6 +228,11 @@ spec:
                 secretKeyRef:
                   name: auth-service-secrets
                   key: ENTRA_TENANT_ID
+            - name: ENTRA_REDIRECT_URI
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secrets
+                  key: ENTRA_REDIRECT_URI
           volumeMounts:
             - name: secrets-store-inline
               mountPath: "/mnt/secrets-store"
