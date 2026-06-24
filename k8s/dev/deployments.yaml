@@ -572,7 +572,7 @@ metadata:
     app: notification-service
     app.kubernetes.io/part-of: nutriai
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: notification-service

@@ -60,7 +60,7 @@ health-service:
 
 notification-service:
   enabled: true
-  replicas: 1
+  replicas: 2
   image:
     tag: latest
 

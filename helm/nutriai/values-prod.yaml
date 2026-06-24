@@ -50,7 +50,7 @@ health-service:
     tag: v0.0.7
 notification-service:
   enabled: true
-  replicas: 1
+  replicas: 2
   image:
     tag: v0.0.9
 profile-service:
