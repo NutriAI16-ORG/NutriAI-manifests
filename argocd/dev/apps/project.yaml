@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: nutriai-dev-project
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  description: Project for NutriAI Development Environment
+  sourceRepos:
+    - 'https://github.com/NutriAI16-ORG/NutriAI-manifests.git'
+  destinations:
+    - namespace: nutriai-dev
+      server: https://kubernetes.default.svc
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  orphanedResources:
+    warn: true

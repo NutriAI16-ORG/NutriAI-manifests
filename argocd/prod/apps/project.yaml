@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: nutriai-prod-project
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  description: Project for NutriAI Production Environment
+  sourceRepos:
+    - 'https://github.com/NutriAI16-ORG/NutriAI-manifests.git'
+  destinations:
+    - namespace: nutriai-prod
+      server: https://kubernetes.default.svc
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  orphanedResources:
+    warn: true
+  syncWindows:
+    - kind: deny
+      schedule: "0 0 * * 6" # Start at midnight on Saturday
+      duration: "48h"       # Covers all of Saturday and Sunday (48 hours)
+      applications:
+        - '*'
+      namespaces:
+        - '*'
+      manualSync: true      # Allow manual emergency overrides
