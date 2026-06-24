@@ -282,12 +282,12 @@ metadata:
   name: argocd-ingress
   namespace: argocd
   annotations:
-    kubernetes.io/ingress.class: azure-application-gateway
     appgw.ingress.kubernetes.io/ssl-redirect: "true"
     appgw.ingress.kubernetes.io/backend-protocol: "Http"
     # Point to the wildcard certificate in your Key Vault
     appgw.ingress.kubernetes.io/appgw-ssl-certificate: "nutriai-tls-cert"
 spec:
+  ingressClassName: azure-application-gateway
   rules:
     - host: "argocd.nutriai.buzz"
       http:
