@@ -3,6 +3,8 @@ kind: NetworkPolicy
 metadata:
   name: default-deny-all
   namespace: {{ .Values.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   podSelector: {}
   policyTypes:
@@ -14,6 +16,8 @@ kind: NetworkPolicy
 metadata:
   name: allow-dns
   namespace: {{ .Values.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   podSelector: {}
   policyTypes:
@@ -35,6 +39,8 @@ kind: NetworkPolicy
 metadata:
   name: frontend-netpol
   namespace: {{ .Values.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   podSelector:
     matchLabels:
@@ -51,6 +57,8 @@ kind: NetworkPolicy
 metadata:
   name: api-gateway-netpol
   namespace: {{ .Values.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   podSelector:
     matchLabels:
@@ -97,6 +105,8 @@ kind: NetworkPolicy
 metadata:
   name: backend-services-netpol
   namespace: {{ .Values.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   podSelector:
     matchExpressions:

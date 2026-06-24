@@ -4,6 +4,8 @@ kind: Service
 metadata:
   name: api-gateway
   namespace: {{ .Values.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   selector:
     app: api-gateway
@@ -17,6 +19,8 @@ kind: Service
 metadata:
   name: admin-service
   namespace: {{ .Values.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   selector:
     app: admin-service
@@ -30,6 +34,8 @@ kind: Service
 metadata:
   name: auth-service
   namespace: {{ .Values.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   selector:
     app: auth-service
@@ -43,6 +49,8 @@ kind: Service
 metadata:
   name: diet-service
   namespace: {{ .Values.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   selector:
     app: diet-service
@@ -56,6 +64,8 @@ kind: Service
 metadata:
   name: document-service
   namespace: {{ .Values.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   selector:
     app: document-service
@@ -69,6 +79,8 @@ kind: Service
 metadata:
   name: frontend
   namespace: {{ .Values.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   selector:
     app: frontend
@@ -82,6 +94,8 @@ kind: Service
 metadata:
   name: health-service
   namespace: {{ .Values.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   selector:
     app: health-service
@@ -95,6 +109,8 @@ kind: Service
 metadata:
   name: notification-service
   namespace: {{ .Values.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   selector:
     app: notification-service
@@ -108,6 +124,8 @@ kind: Service
 metadata:
   name: profile-service
   namespace: {{ .Values.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   selector:
     app: profile-service

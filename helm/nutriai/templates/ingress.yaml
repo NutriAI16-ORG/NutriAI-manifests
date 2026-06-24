@@ -4,6 +4,7 @@ metadata:
   name: nutriai-ingress
   namespace: {{ .Values.namespace }}
   annotations:
+    argocd.argoproj.io/sync-wave: "5"
     appgw.ingress.kubernetes.io/request-timeout: "300"
     appgw.ingress.kubernetes.io/connection-draining: "true"
     appgw.ingress.kubernetes.io/connection-draining-timeout: "30"
