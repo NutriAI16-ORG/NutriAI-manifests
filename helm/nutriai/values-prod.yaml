@@ -6,7 +6,7 @@ image:
   registry: nutriaiacrprod.azurecr.io
   pullPolicy: Always
 ingress:
-  host: ""
+  host: "nutriai.buzz"
 admin-service:
   enabled: true
   replicas: 1
@@ -88,4 +88,4 @@ config:
     smtpHost: "smtp.gmail.com"
     smtpPort: "587"
     smtpFromEmail: "noreply@nutriai-health.com"
-    appUrl: "https://nutriai.example.com"
+    appUrl: "https://nutriai.buzz"
