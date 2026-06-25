@@ -39,7 +39,7 @@ frontend:
   enabled: true
   replicas: 2
   image:
-    tag: v0.4.0
+    tag: v0.4.1
   hpa:
     minReplicas: 2
     maxReplicas: 4
@@ -89,8 +89,5 @@ config:
     smtpPort: "587"
     smtpFromEmail: "noreply@nutriai-health.com"
     appUrl: "https://nutriai.buzz"
-
 redis:
   enabled: true
-
-
