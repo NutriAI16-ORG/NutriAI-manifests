@@ -52,7 +52,7 @@ notification-service:
   enabled: true
   replicas: 2
   image:
-    tag: v0.0.11
+    tag: v0.0.12
 profile-service:
   enabled: true
   replicas: 2
