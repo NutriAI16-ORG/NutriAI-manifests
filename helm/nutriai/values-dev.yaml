@@ -99,3 +99,8 @@ config:
     smtpFromEmail: "noreply@nutriai-health.com"
     appUrl: "https://dev.nutriai.buzz"
 
+redis:
+  enabled: true
+
+
+

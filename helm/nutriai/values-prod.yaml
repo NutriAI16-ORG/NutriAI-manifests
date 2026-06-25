@@ -89,3 +89,8 @@ config:
     smtpPort: "587"
     smtpFromEmail: "noreply@nutriai-health.com"
     appUrl: "https://nutriai.buzz"
+
+redis:
+  enabled: true
+
+

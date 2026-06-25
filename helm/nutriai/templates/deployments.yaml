@@ -330,6 +330,13 @@ spec:
                 configMapKeyRef:
                   name: diet-service-config
                   key: AZURE_SERVICE_BUS_TOPIC_NAME
+            {{- if .Values.redis.enabled }}
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: REDIS_URL
+            {{- end }}
           volumeMounts:
             - name: secrets-store-inline
               mountPath: "/mnt/secrets-store"
@@ -437,6 +444,13 @@ spec:
                 configMapKeyRef:
                   name: document-service-config
                   key: AZURE_OPENAI_API_VERSION
+            {{- if .Values.redis.enabled }}
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: REDIS_URL
+            {{- end }}
           volumeMounts:
             - name: secrets-store-inline
               mountPath: "/mnt/secrets-store"
@@ -558,6 +572,13 @@ spec:
                 secretKeyRef:
                   name: health-service-secrets
                   key: DATABASE_URL
+            {{- if .Values.redis.enabled }}
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: REDIS_URL
+            {{- end }}
           volumeMounts:
             - name: secrets-store-inline
               mountPath: "/mnt/secrets-store"
@@ -737,6 +758,13 @@ spec:
                 secretKeyRef:
                   name: profile-service-secrets
                   key: DATABASE_URL
+            {{- if .Values.redis.enabled }}
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: REDIS_URL
+            {{- end }}
           volumeMounts:
             - name: secrets-store-inline
               mountPath: "/mnt/secrets-store"
