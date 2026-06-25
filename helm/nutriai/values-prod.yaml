@@ -34,7 +34,7 @@ document-service:
   enabled: true
   replicas: 2
   image:
-    tag: v0.0.5
+    tag: v0.0.6
 frontend:
   enabled: true
   replicas: 2
