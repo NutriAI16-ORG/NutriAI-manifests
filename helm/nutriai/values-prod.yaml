@@ -39,7 +39,7 @@ frontend:
   enabled: true
   replicas: 2
   image:
-    tag: v0.3.0
+    tag: v0.4.0
   hpa:
     minReplicas: 2
     maxReplicas: 5
