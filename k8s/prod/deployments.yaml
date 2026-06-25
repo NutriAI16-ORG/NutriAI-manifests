@@ -766,7 +766,7 @@ spec:
     kind: Deployment
     name: diet-service
   minReplicas: 2
-  maxReplicas: 5
+  maxReplicas: 4
   metrics:
     - type: Resource
       resource:
@@ -786,7 +786,7 @@ spec:
     kind: Deployment
     name: frontend
   minReplicas: 2
-  maxReplicas: 5
+  maxReplicas: 4
   metrics:
     - type: Resource
       resource:

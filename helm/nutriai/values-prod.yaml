@@ -29,7 +29,7 @@ diet-service:
     tag: v0.0.14
   hpa:
     minReplicas: 2
-    maxReplicas: 5
+    maxReplicas: 4
 document-service:
   enabled: true
   replicas: 2
@@ -42,7 +42,7 @@ frontend:
     tag: v0.4.0
   hpa:
     minReplicas: 2
-    maxReplicas: 5
+    maxReplicas: 4
 health-service:
   enabled: true
   replicas: 2
