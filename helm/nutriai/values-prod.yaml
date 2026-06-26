@@ -57,7 +57,7 @@ profile-service:
   enabled: true
   replicas: 2
   image:
-    tag: v0.0.10
+    tag: v0.0.11
 api-gateway-service:
   image:
     tag: v0.0.12
